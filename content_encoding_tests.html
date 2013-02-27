@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> Tests for HTTP Encoding Support </TITLE>
+ </HEAD>
+
+ <BODY>
+
+
+<BR/><BR/><BR/>
+  <font size="2">
+ 
+<ul> 
+<li class="focus">  <a href="http://www.ietf.org/rfc/rfc2616.txt"> Content-Encoding: GZIP and Transfer-Encoding: Chuncked </a> </li>
+<li>  <a href="http://news.google.com/"> CSS and JS Encoded in GZIP </a> </li>
+<li> <a href="javascript:updateFrame('http://www.ietf.org/rfc/rfc2617.txt');"> IFrame encoded in GZIP </a> </li>
+<li> <a href="javascript:updateFrame('http://www.google.com');"> IFrame with CSS and JS encoded in GZIP </a> </li>
+</ul>
+
+<iframe name="iframe_content" id="iframe_content" height=500 width=1000> </iframe>
+
+</div>
+</div>
+<BR>
+<script>
+function updateFrame(url)
+{
+	document.all.iframe_content.src = url;
+}
+</script>
+
+
+ </BODY>
+</HTML>
