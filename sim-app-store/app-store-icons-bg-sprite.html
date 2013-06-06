@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <title>App Store Icons - 1 big sprite file</title>
+    <style type="text/css">
+      * {margin: 0; padding: 0; }
+
+      #nav li {
+      list-style-type:none;
+      font-size:2em;
+      }
+      #nav li a {
+      background-image:url('app-store-icons/sprite.png');
+      background-repeat: no-repeat;
+      padding: 0 0 0 120px;
+      display: block;
+      height: 120px;
+      float: left;
+      }
+      #nav li a.item1 {background-position:0px 0px;}
+      #nav li a.item2 {background-position:0px -120px;}
+      #nav li a.item3 {background-position:0px -240px;}
+      #nav li a.item4 {background-position:0px -360px;}
+      #nav li a.item5 {background-position:0px -480px;}
+      #nav li a.item6 {background-position:0px -600px;}
+      #nav li a.item7 {background-position:0px -720px;}
+      #nav li a.item8 {background-position:0px -840px;}
+      #nav li a.item9 {background-position:0px -960px;}
+      #nav li a.item10 {background-position:0px -1080px;}
+      #nav li a.item11 {background-position:0px -1200px;}
+      #nav li a.item12 {background-position:0px -1320px;}
+      #nav li a.item13 {background-position:0px -1440px;}
+      #nav li a.item14 {background-position:0px -1560px;}
+      #nav li a.item15 {background-position:0px -1680px;}
+      #nav li a.item16 {background-position:0px -1800px;}
+      #nav li a.item17 {background-position:0px -1920px;}
+      #nav li a.item18 {background-position:0px -2040px;}
+      #nav li a.item19 {background-position:0px -2160px;}
+      #nav li a.item20 {background-position:0px -2280px;}
+      #nav li a.item21 {background-position:0px -2400px;}
+      #nav li a.item22 {background-position:0px -2520px;}
+      #nav li a.item23 {background-position:0px -2640px;}
+      #nav li a.item24 {background-position:0px -2760px;}
+      #nav li a.item25 {background-position:0px -2880px;}
+      #nav li a.item26 {background-position:0px -3000px;}
+      #nav li a.item27 {background-position:0px -3120px;}
+      #nav li a.item28 {background-position:0px -3240px;}
+      #nav li a.item29 {background-position:0px -3360px;}
+      #nav li a.item30 {background-position:0px -3480px;}
+      #nav li a.item31 {background-position:0px -3600px;}
+      #nav li a.item32 {background-position:0px -3720px;}
+      #nav li a.item33 {background-position:0px -3840px;}
+      #nav li a.item34 {background-position:0px -3960px;}
+      #nav li a.item35 {background-position:0px -4080px;}
+      #nav li a.item36 {background-position:0px -4200px;}
+      #nav li a.item37 {background-position:0px -4320px;}
+      #nav li a.item38 {background-position:0px -4440px;}
+      #nav li a.item39 {background-position:0px -4560px;}
+      #nav li a.item40 {background-position:0px -4680px;}
+      #nav li a.item41 {background-position:0px -4800px;}
+      #nav li a.item42 {background-position:0px -4920px;}
+      #nav li a.item43 {background-position:0px -5040px;}
+      #nav li a.item44 {background-position:0px -5160px;}
+      #nav li a.item45 {background-position:0px -5280px;}
+      #nav li a.item46 {background-position:0px -5400px;}
+      #nav li a.item47 {background-position:0px -5520px;}
+      #nav li a.item48 {background-position:0px -5640px;}
+      #nav li a.item49 {background-position:0px -5760px;}
+      #nav li a.item50 {background-position:0px -5880px;}
+      #nav li a.item51 {background-position:0px -6000px;}
+      #nav li a.item52 {background-position:0px -6120px;}
+      #nav li a.item53 {background-position:0px -6240px;}
+      #nav li a.item54 {background-position:0px -6360px;}
+      #nav li a.item55 {background-position:0px -6480px;}
+      #nav li a.item56 {background-position:0px -6600px;}
+      #nav li a.item57 {background-position:0px -6720px;}
+      #nav li a.item58 {background-position:0px -6840px;}
+      #nav li a.item59 {background-position:0px -6960px;}
+      #nav li a.item60 {background-position:0px -7080px;}
+      #nav li a.item61 {background-position:0px -7200px;}
+      #nav li a.item62 {background-position:0px -7320px;}
+      #nav li a.item63 {background-position:0px -7440px;}
+      #nav li a.item64 {background-position:0px -7560px;}
+      #nav li a.item65 {background-position:0px -7680px;}
+      #nav li a.item66 {background-position:0px -7800px;}
+      #nav li a.item67 {background-position:0px -7920px;}
+      #nav li a.item68 {background-position:0px -8040px;}
+      #nav li a.item69 {background-position:0px -8160px;}
+      #nav li a.item70 {background-position:0px -8280px;}
+      #nav li a.item71 {background-position:0px -8400px;}
+      #nav li a.item72 {background-position:0px -8520px;}
+      #nav li a.item73 {background-position:0px -8640px;}
+      #nav li a.item74 {background-position:0px -8760px;}
+      #nav li a.item75 {background-position:0px -8880px;}
+      #nav li a.item76 {background-position:0px -9000px;}
+      #nav li a.item77 {background-position:0px -9120px;}
+    </style>
+  </head>
+  <body>
+    <ul id="nav">
+      <li><a class="item1" href="#" title="Some Link 1"></a></li>
+      <li><a class="item2" href="#" title="Some Link 2"></a></li>
+      <li><a class="item3" href="#" title="Some Link 3"></a></li>
+      <li><a class="item4" href="#" title="Some Link 4"></a></li>
+      <li><a class="item5" href="#" title="Some Link 5"></a></li>
+      <li><a class="item6" href="#" title="Some Link 6"></a></li>
+      <li><a class="item7" href="#" title="Some Link 7"></a></li>
+      <li><a class="item8" href="#" title="Some Link 8"></a></li>
+      <li><a class="item9" href="#" title="Some Link 9"></a></li>
+      <li><a class="item10" href="#" title="Some Link 10"></a></li>
+      <li><a class="item11" href="#" title="Some Link 11"></a></li>
+      <li><a class="item12" href="#" title="Some Link 12"></a></li>
+      <li><a class="item13" href="#" title="Some Link 13"></a></li>
+      <li><a class="item14" href="#" title="Some Link 14"></a></li>
+      <li><a class="item15" href="#" title="Some Link 15"></a></li>
+      <li><a class="item16" href="#" title="Some Link 16"></a></li>
+      <li><a class="item17" href="#" title="Some Link 17"></a></li>
+      <li><a class="item18" href="#" title="Some Link 18"></a></li>
+      <li><a class="item19" href="#" title="Some Link 19"></a></li>
+      <li><a class="item20" href="#" title="Some Link 20"></a></li>
+      <li><a class="item21" href="#" title="Some Link 21"></a></li>
+      <li><a class="item22" href="#" title="Some Link 22"></a></li>
+      <li><a class="item23" href="#" title="Some Link 23"></a></li>
+      <li><a class="item24" href="#" title="Some Link 24"></a></li>
+      <li><a class="item25" href="#" title="Some Link 25"></a></li>
+      <li><a class="item26" href="#" title="Some Link 26"></a></li>
+      <li><a class="item27" href="#" title="Some Link 27"></a></li>
+      <li><a class="item28" href="#" title="Some Link 28"></a></li>
+      <li><a class="item29" href="#" title="Some Link 29"></a></li>
+      <li><a class="item30" href="#" title="Some Link 30"></a></li>
+      <li><a class="item31" href="#" title="Some Link 31"></a></li>
+      <li><a class="item32" href="#" title="Some Link 32"></a></li>
+      <li><a class="item33" href="#" title="Some Link 33"></a></li>
+      <li><a class="item34" href="#" title="Some Link 34"></a></li>
+      <li><a class="item35" href="#" title="Some Link 35"></a></li>
+      <li><a class="item36" href="#" title="Some Link 36"></a></li>
+      <li><a class="item37" href="#" title="Some Link 37"></a></li>
+      <li><a class="item38" href="#" title="Some Link 38"></a></li>
+      <li><a class="item39" href="#" title="Some Link 39"></a></li>
+      <li><a class="item40" href="#" title="Some Link 40"></a></li>
+      <li><a class="item41" href="#" title="Some Link 41"></a></li>
+      <li><a class="item42" href="#" title="Some Link 42"></a></li>
+      <li><a class="item43" href="#" title="Some Link 43"></a></li>
+      <li><a class="item44" href="#" title="Some Link 44"></a></li>
+      <li><a class="item45" href="#" title="Some Link 45"></a></li>
+      <li><a class="item46" href="#" title="Some Link 46"></a></li>
+      <li><a class="item47" href="#" title="Some Link 47"></a></li>
+      <li><a class="item48" href="#" title="Some Link 48"></a></li>
+      <li><a class="item49" href="#" title="Some Link 49"></a></li>
+      <li><a class="item50" href="#" title="Some Link 50"></a></li>
+      <li><a class="item51" href="#" title="Some Link 51"></a></li>
+      <li><a class="item52" href="#" title="Some Link 52"></a></li>
+      <li><a class="item53" href="#" title="Some Link 53"></a></li>
+      <li><a class="item54" href="#" title="Some Link 54"></a></li>
+      <li><a class="item55" href="#" title="Some Link 55"></a></li>
+      <li><a class="item56" href="#" title="Some Link 56"></a></li>
+      <li><a class="item57" href="#" title="Some Link 57"></a></li>
+      <li><a class="item58" href="#" title="Some Link 58"></a></li>
+      <li><a class="item59" href="#" title="Some Link 59"></a></li>
+      <li><a class="item60" href="#" title="Some Link 60"></a></li>
+      <li><a class="item61" href="#" title="Some Link 61"></a></li>
+      <li><a class="item62" href="#" title="Some Link 62"></a></li>
+      <li><a class="item63" href="#" title="Some Link 63"></a></li>
+      <li><a class="item64" href="#" title="Some Link 64"></a></li>
+      <li><a class="item65" href="#" title="Some Link 65"></a></li>
+      <li><a class="item66" href="#" title="Some Link 66"></a></li>
+      <li><a class="item67" href="#" title="Some Link 67"></a></li>
+      <li><a class="item68" href="#" title="Some Link 68"></a></li>
+      <li><a class="item69" href="#" title="Some Link 69"></a></li>
+      <li><a class="item70" href="#" title="Some Link 70"></a></li>
+      <li><a class="item71" href="#" title="Some Link 71"></a></li>
+      <li><a class="item72" href="#" title="Some Link 72"></a></li>
+      <li><a class="item73" href="#" title="Some Link 73"></a></li>
+      <li><a class="item74" href="#" title="Some Link 74"></a></li>
+      <li><a class="item75" href="#" title="Some Link 75"></a></li>
+      <li><a class="item76" href="#" title="Some Link 76"></a></li>
+      <li><a class="item77" href="#" title="Some Link 77"></a></li>
+    </ul>
+  </body>
+</html>
