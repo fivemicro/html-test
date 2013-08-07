@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <title>visibility</title>
+    <script>
+      function handleVisibilityChange() {
+        if (document.webkitHidden) {
+          console.log("hidden");
+        } else {
+          console.log("visible");
+        }
+      }
+
+      document.addEventListener("webkitvisibilitychange", handleVisibilityChange, false);
+    </script>
+  </head>
+  <body>
+    <h1>Visibility Event Test</h1>
+  </body>
+</html>
