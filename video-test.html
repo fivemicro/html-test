@@ -2,9 +2,20 @@
 <html>
   <head>
     <title>video element test</title>
+    <script>
+      function playPause()
+      {
+        var bVideo = document.getElementById("baileys_video");
+
+        if (bVideo.paused)
+          bVideo.play();
+        else
+          bVideo.pause();
+      }
+    </script>
   </head>
-  <body>
-    <video width="640" height="480" controls>
+  <body onLoad="playPause();">
+    <video id="baileys_video" width="640" height="480" controls>
       <source src="video/baileys_5sec.mp4" type="video/mp4">
     </video>
   </body>
