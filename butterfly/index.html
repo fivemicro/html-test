@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Perspective Origin</title>
+    <title>Butterfly</title>
 
     <!-- IOS/Safari tweaks -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
@@ -40,28 +40,28 @@
         .box-top    { -webkit-transform: rotateX(  90deg ) translateZ( 175px ); background-color: blue; }
         .box-bottom { -webkit-transform: rotateX( -90deg ) translateZ( 175px ); background-color: green; }
 
-	.rightwing{
-		-webkit-transform: rotateX(0deg) translateZ(-100px) rotateY(180deg) ;
-		position: absolute;
-		left:0px;
-		top:50px;
-		width: 178px;
-		height: 208px;
-		background-image: url(butterfly-wing.png);
-		background-repeat:no-repeat;
-	}
+        .rightwing{
+                -webkit-transform: rotateX(0deg) translateZ(-100px) rotateY(180deg) ;
+                position: absolute;
+                left:0px;
+                top:50px;
+                width: 178px;
+                height: 208px;
+                background-image: url(butterfly-wing.png);
+                background-repeat:no-repeat;
+        }
 
-	.leftwing{
-		-webkit-transform: rotateX(0deg) translateZ(-100px) ;
-		position: absolute;
-		-webkit-transform-origin: top right;
-		left:0px;
-		top:50px;
-		width: 178px;
-		height: 208px;
-		background-image: url(butterfly-wing.png);
-		background-repeat: no-repeat;
-	}
+        .leftwing{
+                -webkit-transform: rotateX(0deg) translateZ(-100px) ;
+                position: absolute;
+                -webkit-transform-origin: top right;
+                left:0px;
+                top:50px;
+                width: 178px;
+                height: 208px;
+                background-image: url(butterfly-wing.png);
+                background-repeat: no-repeat;
+        }
 
     </style>
     <script type="text/javascript" src="zepto.js"></script>
@@ -112,7 +112,7 @@
 <hr>
     <div id="box">
         <div class="face box-back">
-	        <img src="butterfly-bg.jpg" width=350 height=350>
+                <img src="butterfly-bg.jpg" width=350 height=350>
         </div>
         <div class="face leftwing"></div>
         <div class="face rightwing"></div>
@@ -150,13 +150,13 @@
                 if (!mouseisdown) {
                     return;
                 }
-                evt.preventDefault();
+                evt.preventDefault();
                 setPerspectiveOrigin(evt.clientX, evt.clientY);
             };
 
             function mouseup (evt) {
                 mouseisdown = false;
-                evt.preventDefault();
+                evt.preventDefault();
             };
 
             function touchstart(evt) {
@@ -169,7 +169,7 @@
                 if (!mouseisdown) {
                     return;
                 }
-                evt.preventDefault();
+                evt.preventDefault();
                 setPerspectiveOrigin(evt.targetTouches[0].clientX, evt.targetTouches[0].clientY);
             };
             function touchend(evt) {
@@ -198,7 +198,7 @@
     var threshold = 0.8;
     var maxAngle = 85; // At +/-90 degrees it gets very "noisy"
     initOrientationHandler();
-    
+
     function initOrientationHandler() {
       if (window.DeviceOrientationEvent) {
         document.getElementById("doEvent").innerHTML = "DeviceOrientation";
@@ -213,7 +213,7 @@
           var diff = tiltLR - lastTiltLR;
           if (diff < 0) diff = -diff;
           if (diff > threshold) update++;
-          
+
           // beta is the front-to-back tilt in degrees, where front is positive
           var tiltFB = eventData.beta;
           if (tiltFB < -maxAngle) { atMax++; tiltFB = -maxAngle; }
@@ -221,10 +221,10 @@
           var diff = tiltFB - lastTiltFB;
           if (diff < 0) diff = -diff;
           if (diff > threshold) update++;
-          
+
           // alpha is the compass direction the device is facing in degrees
           var dir = eventData.alpha
-          
+
           // call our orientation event handler
           if (update) {
               if ((update == 1) && atMax) {
@@ -279,11 +279,11 @@
         nCtx.lineTo(endX, endY);
         nCtx.stroke();
     }
-  
+
     function deviceOrientationHandler(tiltLR, tiltFB, dir) {
       var newX = tiltLR.toFixed(3);
       var newY = tiltFB.toFixed(3);
-     
+
       document.getElementById("doTiltLR").innerHTML = newX;
       document.getElementById("doTiltFB").innerHTML = newY;
       document.getElementById("doDirection").innerHTML = dir.toFixed(3);
