@@ -64,8 +64,6 @@
         }
 
     </style>
-    <script type="text/javascript" src="zepto.js"></script>
-    <script type="text/javascript" src="Stats.js"></script>
 </head>
 <body>
     <div class="main">
@@ -122,75 +120,79 @@
         <div class="face box-right"></div>
     </div>
     <script type="text/javascript">
-      var g_newX;
-      var g_newY;
-      var g_dir;
+      function $(e) {return document.getElementById(e) || document.getElementsByTagName(e)[0];}
 
-      function animateFrame(timestamp) {
-        var $body = $(document.body);
-        $body.css('-webkit-perspective-origin', g_newX + 'px ' + g_newY + 'px');
-        drawNeedle(g_dir);
+      var g_body = $('body');
+      var g_touch_x = $('touchX');
+      var g_touch_y = $('touchY');
+
+      var g_X;
+      var g_Y;
+      var g_Direction;
+
+      function animateBody(timestamp) {
+          g_touch_x.innerHTML = g_X;
+          g_touch_y.innerHTML = g_Y;
+          g_body.style.webkitPerspectiveOrigin=g_X + 'px ' + g_Y + 'px';
+          drawNeedle(g_Direction);
       }
 
-        (function() {
-            "use strict";
+      (function() {
+          "use strict";
 
-            var mouseisdown = false;
-            var $body = $(document.body);
-            var w = $body.width();
-            var h = $body.height();
+          var mouseisdown = false;
 
-            function mousedown(evt) {
-                mouseisdown = true;
-                setPerspectiveOrigin(evt.clientX, evt.clientY);
-                evt.preventDefault();
-            };
+          function mousedown(evt) {
+              mouseisdown = true;
+              setPerspectiveOrigin(evt.clientX, evt.clientY);
+              evt.preventDefault();
+          };
 
-            function mousemove(evt) {
-                if (!mouseisdown) {
-                    return;
-                }
-                evt.preventDefault();
-                setPerspectiveOrigin(evt.clientX, evt.clientY);
-            };
+          function mousemove(evt) {
+              if (!mouseisdown) {
+                  return;
+              }
+              evt.preventDefault();
+              setPerspectiveOrigin(evt.clientX, evt.clientY);
+          };
 
-            function mouseup (evt) {
-                mouseisdown = false;
-                evt.preventDefault();
-            };
+          function mouseup (evt) {
+              mouseisdown = false;
+              evt.preventDefault();
+          };
 
-            function touchstart(evt) {
-                mouseisdown = true;
-                setPerspectiveOrigin(evt.targetTouches[0].clientX, evt.targetTouches[0].clientY);
-                evt.preventDefault();
-            };
+          function touchstart(evt) {
+              mouseisdown = true;
+              setPerspectiveOrigin(evt.targetTouches[0].clientX, evt.targetTouches[0].clientY);
+              evt.preventDefault();
+          };
 
-            function touchmove(evt) {
-                if (!mouseisdown) {
-                    return;
-                }
-                evt.preventDefault();
-                setPerspectiveOrigin(evt.targetTouches[0].clientX, evt.targetTouches[0].clientY);
-            };
-            function touchend(evt) {
-                mouseisdown = false;
-                evt.preventDefault();
-            };
+          function touchmove(evt) {
+              if (!mouseisdown) {
+                  return;
+              }
+              evt.preventDefault();
+              setPerspectiveOrigin(evt.targetTouches[0].clientX, evt.targetTouches[0].clientY);
+          };
 
-            function setPerspectiveOrigin(x, y) {
-                document.getElementById("touchX").innerHTML = x;
-                document.getElementById("touchY").innerHTML = y;
-                g_newX = x;
-                g_newY = y;
-                requestAnimationFrame(animateFrame);
-            }
-            $body.on('mousedown',mousedown);
-            $body.on('mousemove',mousemove);
-            $body.on('mouseup',mouseup);
-            $body.on('touchstart',touchstart);
-            $body.on('touchmove',touchmove);
-            $body.on('touchend',touchend);
-        }())
+          function touchend(evt) {
+              mouseisdown = false;
+              evt.preventDefault();
+          };
+
+          function setPerspectiveOrigin(x, y) {
+              g_X = x;
+              g_Y = y;
+              requestAnimationFrame(animateBody);
+          }
+
+          g_body.addEventListener('mousedown', mousedown);
+          g_body.addEventListener('mousemove', mousemove);
+          g_body.addEventListener('mouseup', mouseup);
+          g_body.addEventListener('touchstart', touchstart);
+          g_body.addEventListener('touchmove', touchmove);
+          g_body.addEventListener('touchend', touchend);
+    }())
 
     var count = 0;
     var lastTiltLR = 0;
@@ -201,7 +203,7 @@
 
     function initOrientationHandler() {
       if (window.DeviceOrientationEvent) {
-        document.getElementById("doEvent").innerHTML = "DeviceOrientation";
+        $("doEvent").innerHTML = "DeviceOrientation";
         // Listen for the deviceorientation event and handle the raw data
         window.addEventListener('deviceorientation', function(eventData) {
           var update = 0;
@@ -238,13 +240,13 @@
           }
         }, false);
       } else {
-        document.getElementById("doEvent").innerHTML = "Not supported on your device or browser.  Sorry."
+          $("doEvent").innerHTML = "Not supported on your device or browser.  Sorry."
       }
     }
 
     // assumes a div with size 30x30
     function drawNeedle(degrees) {
-        var nCanvas = document.getElementById('needle');
+        var nCanvas = $('needle');
         var nCtx = nCanvas.getContext('2d');
         var radius=15;
         // Needle north points up (PI/4)
@@ -287,7 +289,7 @@
       document.getElementById("doTiltLR").innerHTML = newX;
       document.getElementById("doTiltFB").innerHTML = newY;
       document.getElementById("doDirection").innerHTML = dir.toFixed(3);
-      g_dir = dir.toFixed(3);
+      g_Direction = dir.toFixed(3);
 
       document.getElementById("ScreenOrientation").innerHTML = window.orientation;
       document.getElementById("ScreenWidth").innerHTML = screen.width;
@@ -344,11 +346,9 @@
         default:
                 break;
       }
-      g_newX = newX = newX.toFixed(3);
-      g_newY = newY = newY.toFixed(3);
-      document.getElementById("touchX").innerHTML = newX;
-      document.getElementById("touchY").innerHTML = newY;
-      requestAnimationFrame(animateFrame);
+        g_X = newX = newX.toFixed(3);
+        g_Y = newY = newY.toFixed(3);
+        requestAnimationFrame(animateBody);
     }
   </script>
 </body>
