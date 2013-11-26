@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Perspective Origin</title>
+
+    <!-- IOS/Safari tweaks -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <style>
+        body {
+            background-color: gray;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            -webkit-transform-style: preserve-3d;
+            -webkit-perspective: 600;
+        }
+        #box {
+            margin-left: 200px;
+            margin-top: 100px;
+            font-size: 0;
+            position: relative;
+            -webkit-transform-style: preserve-3d;
+            -webkit-transform: translateZ( -100px );
+        }
+        #box .face {
+            width: 350px;
+            height: 350px;
+            display: block;
+            border: 0px;
+            position: absolute;
+        }
+        .box-back   { -webkit-transform: rotateX(   0deg ) translateZ( -175px ); background-color: green; }
+        .box-right  { -webkit-transform: rotateY(  90deg ) translateZ( 175px ); background-color: yellow; }
+        .box-left   { -webkit-transform: rotateY( -90deg ) translateZ( 175px ); background-color: yellow; }
+        .box-top    { -webkit-transform: rotateX(  90deg ) translateZ( 175px ); background-color: blue; }
+        .box-bottom { -webkit-transform: rotateX( -90deg ) translateZ( 175px ); background-color: green; }
+
+	.rightwing{
+		-webkit-transform: rotateX(0deg) translateZ(-100px) rotateY(180deg) ;
+		position: absolute;
+		left:0px;
+		top:50px;
+		width: 178px;
+		height: 208px;
+		background-image: url(butterfly-wing.png);
+		background-repeat:no-repeat;
+	}
+
+	.leftwing{
+		-webkit-transform: rotateX(0deg) translateZ(-100px) ;
+		position: absolute;
+		-webkit-transform-origin: top right;
+		left:0px;
+		top:50px;
+		width: 178px;
+		height: 208px;
+		background-image: url(butterfly-wing.png);
+		background-repeat: no-repeat;
+	}
+
+    </style>
+    <script type="text/javascript" src="../SilkTest/libs/zepto.js"></script>
+    <script type="text/javascript" src="../SilkTest/libs/Stats.js"></script>
+</head>
+<body>
+    <div class="main">
+      <table>
+        <tr>
+          <td>Event Supported</td>
+          <td id="doEvent"></td>
+          <td><canvas id="needle" width="30" height="30"></canvas></td>
+        </tr>
+        <tr>
+          <td>Tilt Left/Right [gamma]</td>
+          <td id="doTiltLR"></td>
+        </tr>
+        <tr>
+          <td>Tilt Front/Back [beta]</td>
+          <td id="doTiltFB"></td>
+        </tr>
+        <tr>
+          <td>Direction [alpha]</td>
+          <td id="doDirection"></td>
+        </tr>
+        <tr>
+          <td>Screen Orientation</td>
+          <td id="ScreenOrientation"></td>
+        </tr>
+        <tr>
+          <td>Screen Width</td>
+          <td id="ScreenWidth"></td>
+        </tr>
+        <tr>
+          <td>Screen Height</td>
+          <td id="ScreenHeight"></td>
+        </tr>
+        <tr>
+          <td>Touch position [x]</td>
+          <td id="touchX"></td>
+        </tr>
+        <tr>
+          <td>Touch position [y]</td>
+          <td id="touchY"></td>
+        </tr>
+      </table>
+    </div>
+<hr>
+    <div id="box">
+        <div class="face box-back">
+	        <img src="butterfly-bg.jpg" width=350 height=350>
+        </div>
+        <div class="face leftwing"></div>
+        <div class="face rightwing"></div>
+        <div class="face box-top"></div>
+        <div class="face box-bottom"></div>
+        <div class="face box-left"></div>
+        <div class="face box-right"></div>
+    </div>
+    <script type="text/javascript">
+        (function() {
+            "use strict";
+
+            var mouseisdown = false;
+            var $body = $(document.body);
+            var w = $body.width();
+            var h = $body.height();
+
+            function mousedown(evt) {
+                mouseisdown = true;
+                setPerspectiveOrigin(evt.clientX, evt.clientY);
+                evt.preventDefault();
+            };
+
+            function mousemove(evt) {
+                if (!mouseisdown) {
+                    return;
+                }
+                evt.preventDefault();
+                setPerspectiveOrigin(evt.clientX, evt.clientY);
+            };
+
+            function mouseup (evt) {
+                mouseisdown = false;
+                evt.preventDefault();
+            };
+
+            function touchstart(evt) {
+                mouseisdown = true;
+                setPerspectiveOrigin(evt.targetTouches[0].clientX, evt.targetTouches[0].clientY);
+                evt.preventDefault();
+            };
+
+            function touchmove(evt) {
+                if (!mouseisdown) {
+                    return;
+                }
+                evt.preventDefault();
+                setPerspectiveOrigin(evt.targetTouches[0].clientX, evt.targetTouches[0].clientY);
+            };
+            function touchend(evt) {
+                mouseisdown = false;
+                evt.preventDefault();
+            };
+
+            function setPerspectiveOrigin(x, y) {
+                document.getElementById("touchX").innerHTML = x;
+                document.getElementById("touchY").innerHTML = y;
+                $body.css('-webkit-perspective-origin', x + 'px ' + y + 'px');
+            }
+            $body.on('mousedown',mousedown);
+            $body.on('mousemove',mousemove);
+            $body.on('mouseup',mouseup);
+            $body.on('touchstart',touchstart);
+            $body.on('touchmove',touchmove);
+            $body.on('touchend',touchend);
+        }())
+
+    var count = 0;
+    var lastTiltLR = 0;
+    var lastTiltFB = 0;
+    var threshold = 1;
+    var maxAngle = 85; // At +/-90 degrees it gets very "noisy"
+    initOrientationHandler();
+    
+    function initOrientationHandler() {
+      if (window.DeviceOrientationEvent) {
+        document.getElementById("doEvent").innerHTML = "DeviceOrientation";
+        // Listen for the deviceorientation event and handle the raw data
+        window.addEventListener('deviceorientation', function(eventData) {
+          var update = 0;
+          var atMax = 0;
+          // gamma is the left-to-right tilt in degrees, where right is positive
+          var tiltLR = eventData.gamma;
+          if (tiltLR < -maxAngle) { atMax++; tiltLR = -maxAngle; }
+          if (tiltLR > maxAngle) { atMax++; tiltLR = maxAngle; }
+          var diff = tiltLR - lastTiltLR;
+          if (diff < 0) diff = -diff;
+          if (diff > threshold) update++;
+          
+          // beta is the front-to-back tilt in degrees, where front is positive
+          var tiltFB = eventData.beta;
+          if (tiltFB < -maxAngle) { atMax++; tiltFB = -maxAngle; }
+          if (tiltFB > maxAngle) { atMax++; tiltFB = maxAngle; }
+          var diff = tiltFB - lastTiltFB;
+          if (diff < 0) diff = -diff;
+          if (diff > threshold) update++;
+          
+          // alpha is the compass direction the device is facing in degrees
+          var dir = eventData.alpha
+          
+          // call our orientation event handler
+          if (update) {
+              if ((update == 1) && atMax) {
+                  //  The one atMax is not noisy, but the other likely is, so ignore.
+              }
+              else {
+                  deviceOrientationHandler(tiltLR, tiltFB, dir);
+                  lastTiltLR = tiltLR;
+                  lastTiltFB = tiltFB;
+              }
+          }
+        }, false);
+      } else {
+        document.getElementById("doEvent").innerHTML = "Not supported on your device or browser.  Sorry."
+      }
+    }
+
+    // assumes a div with size 30x30
+    function drawNeedle(degrees) {
+        var nCanvas = document.getElementById('needle');
+        var nCtx = nCanvas.getContext('2d');
+        var radius=15;
+        // Needle north points up (PI/4)
+        var angleRad = ((degrees + 90)%360) * Math.PI / 180;
+        nCtx.fillStyle = 'white';
+        nCtx.fillRect(0,0,30,30);
+        nCtx.fillStyle = 'blue';
+        nCtx.beginPath();
+        nCtx.moveTo(15,15);
+        var endX = 15;
+        var endY = 15;
+        switch(window.orientation) {
+        case 0:
+            endX = endX - (Math.cos(angleRad) * radius);
+            endY = endY - (Math.sin(angleRad) * radius);
+            break;
+        case 90:
+            endX = endX - (Math.sin(angleRad) * radius);
+            endY = endY + (Math.cos(angleRad) * radius);
+            break;
+        case -90:
+            endX = endX + (Math.sin(angleRad) * radius);
+            endY = endY - (Math.cos(angleRad) * radius);
+            break;
+        case 180:
+            endX = endX + (Math.cos(angleRad) * radius);
+            endY = endY + (Math.sin(angleRad) * radius);
+            break;
+        default:
+            break;
+        }
+        nCtx.lineTo(endX, endY);
+        nCtx.stroke();
+    }
+  
+    function deviceOrientationHandler(tiltLR, tiltFB, dir) {
+      var newX = Math.round(tiltLR);
+      var newY = Math.round(tiltFB);
+     
+      document.getElementById("doTiltLR").innerHTML = newX;
+      document.getElementById("doTiltFB").innerHTML = newY;
+      document.getElementById("doDirection").innerHTML = Math.round(dir);
+      drawNeedle(dir);
+
+      document.getElementById("ScreenOrientation").innerHTML = window.orientation;
+      document.getElementById("ScreenWidth").innerHTML = screen.width;
+      document.getElementById("ScreenHeight").innerHTML = screen.height;
+
+      var posLeft = Math.round((screen.width - 350) * 0.5);
+      document.getElementById("box").style.marginLeft=posLeft.toString() + "px";
+
+      switch(window.orientation) {
+        case -90:
+                // Swap beta and gamma and fall through
+                // beta (+50,-50) translate to X (0,600);
+                // gamma  (-90,  0) translate to Y (0,840);
+                newX = Math.round(tiltFB);
+                newY = Math.round(tiltLR);
+        case 0:
+                // gamma (+50,-50) translate to X (0,600);
+                // beta  (+90,  0) translate to Y (0,840);
+                var magnX = (screen.width + 45) * 0.0111111; // ~= 1/90
+                var halfW = screen.width * 0.5;
+                newX = newX * magnX;
+                if (window.orientation == 0) {
+                    newX = halfW - newX;
+                }
+                else {
+                    newX = halfW + newX;
+                }
+                var magnY = (screen.height + 45) * 0.0111111;
+                newY = newY * magnY;
+                newY = screen.height - newY;
+                break;
+        case 90:
+                // Swap beta and gamma and fall through
+                // beta  (-50,+50) translate to X (0,840);
+                // gamma (-90,  0) translate to Y (0,600);
+                newX = Math.round(tiltFB);
+                newY = Math.round(tiltLR);
+        case 180:
+                // gamma (-50,+50) translate to X (0,600);
+                // beta  (0, -90) translate to Y (0,840);
+                var magnX = (screen.width + 45) * 0.0111111;
+                var halfW = screen.width * 0.5;
+                newX = newX * magnX;
+                if (window.orientation == 180) {
+                    newX = newX + halfW;
+                }
+                else {
+                    newX = halfW - newX;
+                }
+                var magnY = (screen.height + 45) * 0.0111111;
+                newY = 90 + newY;
+                newY = newY * magnY;
+                break;
+        default:
+                break;
+      }
+      newX = Math.round(newX);
+      newY = Math.round(newY);
+      //console.log("X=" + newX + " Y=" + newY);
+      document.getElementById("touchX").innerHTML = newX;
+      document.getElementById("touchY").innerHTML = newY;
+      var $body = $(document.body);
+      $body.css('-webkit-perspective-origin', newX + 'px ' + newY + 'px');
+    }
+  </script>
+</body>
+</html>
+
