@@ -267,6 +267,14 @@
         nCtx.lineTo(endX, endY);
         nCtx.stroke();
     }
+
+    var g_newX;
+    var g_newY;
+
+    function animateButterfly(timestamp) {
+      var $body = $(document.body);
+      $body.css('-webkit-perspective-origin', g_newX + 'px ' + g_newY + 'px');
+    }
   
     function deviceOrientationHandler(tiltLR, tiltFB, dir) {
       var newX = tiltLR.toFixed(3);
@@ -332,13 +340,11 @@
         default:
                 break;
       }
-      newX = newX.toFixed(3);
-      newY = newY.toFixed(3);
-      //console.log("X=" + newX + " Y=" + newY);
+      g_newX = newX = newX.toFixed(3);
+      g_newY = newY = newY.toFixed(3);
       document.getElementById("touchX").innerHTML = newX;
       document.getElementById("touchY").innerHTML = newY;
-      var $body = $(document.body);
-      $body.css('-webkit-perspective-origin', newX + 'px ' + newY + 'px');
+      requestAnimationFrame(animateButterfly);
     }
   </script>
 </body>
