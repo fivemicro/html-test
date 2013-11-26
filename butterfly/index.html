@@ -122,6 +122,16 @@
         <div class="face box-right"></div>
     </div>
     <script type="text/javascript">
+      var g_newX;
+      var g_newY;
+      var g_dir;
+
+      function animateFrame(timestamp) {
+        var $body = $(document.body);
+        $body.css('-webkit-perspective-origin', g_newX + 'px ' + g_newY + 'px');
+        drawNeedle(g_dir);
+      }
+
         (function() {
             "use strict";
 
@@ -170,7 +180,9 @@
             function setPerspectiveOrigin(x, y) {
                 document.getElementById("touchX").innerHTML = x;
                 document.getElementById("touchY").innerHTML = y;
-                $body.css('-webkit-perspective-origin', x + 'px ' + y + 'px');
+                g_newX = x;
+                g_newY = y;
+                requestAnimationFrame(animateFrame);
             }
             $body.on('mousedown',mousedown);
             $body.on('mousemove',mousemove);
@@ -183,7 +195,7 @@
     var count = 0;
     var lastTiltLR = 0;
     var lastTiltFB = 0;
-    var threshold = 0.2;
+    var threshold = 0.8;
     var maxAngle = 85; // At +/-90 degrees it gets very "noisy"
     initOrientationHandler();
     
@@ -267,14 +279,6 @@
         nCtx.lineTo(endX, endY);
         nCtx.stroke();
     }
-
-    var g_newX;
-    var g_newY;
-
-    function animateButterfly(timestamp) {
-      var $body = $(document.body);
-      $body.css('-webkit-perspective-origin', g_newX + 'px ' + g_newY + 'px');
-    }
   
     function deviceOrientationHandler(tiltLR, tiltFB, dir) {
       var newX = tiltLR.toFixed(3);
@@ -283,7 +287,7 @@
       document.getElementById("doTiltLR").innerHTML = newX;
       document.getElementById("doTiltFB").innerHTML = newY;
       document.getElementById("doDirection").innerHTML = dir.toFixed(3);
-      drawNeedle(dir);
+      g_dir = dir.toFixed(3);
 
       document.getElementById("ScreenOrientation").innerHTML = window.orientation;
       document.getElementById("ScreenWidth").innerHTML = screen.width;
@@ -344,7 +348,7 @@
       g_newY = newY = newY.toFixed(3);
       document.getElementById("touchX").innerHTML = newX;
       document.getElementById("touchY").innerHTML = newY;
-      requestAnimationFrame(animateButterfly);
+      requestAnimationFrame(animateFrame);
     }
   </script>
 </body>
