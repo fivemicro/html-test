@@ -269,12 +269,12 @@
     }
   
     function deviceOrientationHandler(tiltLR, tiltFB, dir) {
-      var newX = Math.round(tiltLR);
-      var newY = Math.round(tiltFB);
+      var newX = tiltLR.toFixed(3);
+      var newY = tiltFB.toFixed(3);
      
       document.getElementById("doTiltLR").innerHTML = newX;
       document.getElementById("doTiltFB").innerHTML = newY;
-      document.getElementById("doDirection").innerHTML = Math.round(dir);
+      document.getElementById("doDirection").innerHTML = dir.toFixed(3);
       drawNeedle(dir);
 
       document.getElementById("ScreenOrientation").innerHTML = window.orientation;
@@ -289,8 +289,8 @@
                 // Swap beta and gamma and fall through
                 // beta (+50,-50) translate to X (0,600);
                 // gamma  (-90,  0) translate to Y (0,840);
-                newX = Math.round(tiltFB);
-                newY = Math.round(tiltLR);
+                newX = tiltFB.toFixed(3);
+                newY = tiltLR.toFixed(3);
         case 0:
                 // gamma (+50,-50) translate to X (0,600);
                 // beta  (+90,  0) translate to Y (0,840);
@@ -311,8 +311,8 @@
                 // Swap beta and gamma and fall through
                 // beta  (-50,+50) translate to X (0,840);
                 // gamma (-90,  0) translate to Y (0,600);
-                newX = Math.round(tiltFB);
-                newY = Math.round(tiltLR);
+                newX = tiltFB.toFixed(3);
+                newY = tiltLR.toFixed(3);
         case 180:
                 // gamma (-50,+50) translate to X (0,600);
                 // beta  (0, -90) translate to Y (0,840);
@@ -332,8 +332,8 @@
         default:
                 break;
       }
-      newX = Math.round(newX);
-      newY = Math.round(newY);
+      newX = newX.toFixed(3);
+      newY = newY.toFixed(3);
       //console.log("X=" + newX + " Y=" + newY);
       document.getElementById("touchX").innerHTML = newX;
       document.getElementById("touchY").innerHTML = newY;
