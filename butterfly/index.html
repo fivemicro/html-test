@@ -244,20 +244,21 @@
       }
     }
 
-    // assumes a div with size 30x30
     function drawNeedle(degrees) {
         var nCanvas = $('needle');
+        var nWidth = nCanvas.width;
+        var nHeight = nCanvas.height;
         var nCtx = nCanvas.getContext('2d');
-        var radius=15;
+        var radius = nWidth / 2;
         // Needle north points up (PI/4)
         var angleRad = ((degrees + 90)%360) * Math.PI / 180;
         nCtx.fillStyle = 'white';
-        nCtx.fillRect(0,0,30,30);
+        nCtx.fillRect(0,0,nWidth,nHeight);
         nCtx.fillStyle = 'blue';
         nCtx.beginPath();
-        nCtx.moveTo(15,15);
-        var endX = 15;
-        var endY = 15;
+        nCtx.moveTo(nWidth / 2, nHeight / 2);
+        var endX = nWidth / 2;
+        var endY = nHeight / 2;
         switch(window.orientation) {
         case 0:
             endX = endX - (Math.cos(angleRad) * radius);
@@ -286,17 +287,17 @@
       var newX = tiltLR.toFixed(3);
       var newY = tiltFB.toFixed(3);
 
-      document.getElementById("doTiltLR").innerHTML = newX;
-      document.getElementById("doTiltFB").innerHTML = newY;
-      document.getElementById("doDirection").innerHTML = dir.toFixed(3);
+      $("doTiltLR").innerHTML = newX;
+      $("doTiltFB").innerHTML = newY;
+      $("doDirection").innerHTML = dir.toFixed(3);
       g_Direction = dir.toFixed(3);
 
-      document.getElementById("ScreenOrientation").innerHTML = window.orientation;
-      document.getElementById("ScreenWidth").innerHTML = screen.width;
-      document.getElementById("ScreenHeight").innerHTML = screen.height;
+      $("ScreenOrientation").innerHTML = window.orientation;
+      $("ScreenWidth").innerHTML = screen.width;
+      $("ScreenHeight").innerHTML = screen.height;
 
       var posLeft = Math.round((screen.width - 350) * 0.5);
-      document.getElementById("box").style.marginLeft=posLeft.toString() + "px";
+      $("box").style.marginLeft=posLeft.toString() + "px";
 
       switch(window.orientation) {
         case -90:
