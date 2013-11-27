@@ -192,57 +192,54 @@
           g_body.addEventListener('touchstart', touchstart);
           g_body.addEventListener('touchmove', touchmove);
           g_body.addEventListener('touchend', touchend);
-    }())
 
-    var count = 0;
-    var lastTiltLR = 0;
-    var lastTiltFB = 0;
-    var threshold = 0.8;
-    var maxAngle = 85; // At +/-90 degrees it gets very "noisy"
-    initOrientationHandler();
+          var count = 0;
+          var lastTiltLR = 0;
+          var lastTiltFB = 0;
+          var threshold = 0.8;
+          var maxAngle = 85; // At +/-90 degrees it gets very "noisy"
 
-    function initOrientationHandler() {
-      if (window.DeviceOrientationEvent) {
-        $("doEvent").innerHTML = "DeviceOrientation";
-        // Listen for the deviceorientation event and handle the raw data
-        window.addEventListener('deviceorientation', function(eventData) {
-          var update = 0;
-          var atMax = 0;
-          // gamma is the left-to-right tilt in degrees, where right is positive
-          var tiltLR = eventData.gamma;
-          if (tiltLR < -maxAngle) { atMax++; tiltLR = -maxAngle; }
-          if (tiltLR > maxAngle) { atMax++; tiltLR = maxAngle; }
-          var diff = tiltLR - lastTiltLR;
-          if (diff < 0) diff = -diff;
-          if (diff > threshold) update++;
-
-          // beta is the front-to-back tilt in degrees, where front is positive
-          var tiltFB = eventData.beta;
-          if (tiltFB < -maxAngle) { atMax++; tiltFB = -maxAngle; }
-          if (tiltFB > maxAngle) { atMax++; tiltFB = maxAngle; }
-          var diff = tiltFB - lastTiltFB;
-          if (diff < 0) diff = -diff;
-          if (diff > threshold) update++;
-
-          // alpha is the compass direction the device is facing in degrees
-          var dir = eventData.alpha
-
-          // call our orientation event handler
-          if (update) {
-              if ((update == 1) && atMax) {
-                  //  The one atMax is not noisy, but the other likely is, so ignore.
-              }
-              else {
-                  deviceOrientationHandler(tiltLR, tiltFB, dir);
-                  lastTiltLR = tiltLR;
-                  lastTiltFB = tiltFB;
-              }
+          if (window.DeviceOrientationEvent) {
+              $("doEvent").innerHTML = "DeviceOrientation";
+              // Listen for the deviceorientation event and handle the raw data
+              window.addEventListener('deviceorientation', function(eventData) {
+                  var update = 0;
+                  var atMax = 0;
+                  // gamma is the left-to-right tilt in degrees, where right is positive
+                  var tiltLR = eventData.gamma;
+                  if (tiltLR < -maxAngle) { atMax++; tiltLR = -maxAngle; }
+                  if (tiltLR > maxAngle) { atMax++; tiltLR = maxAngle; }
+                  var diff = tiltLR - lastTiltLR;
+                  if (diff < 0) diff = -diff;
+                  if (diff > threshold) update++;
+                  
+                  // beta is the front-to-back tilt in degrees, where front is positive
+                  var tiltFB = eventData.beta;
+                  if (tiltFB < -maxAngle) { atMax++; tiltFB = -maxAngle; }
+                  if (tiltFB > maxAngle) { atMax++; tiltFB = maxAngle; }
+                  var diff = tiltFB - lastTiltFB;
+                  if (diff < 0) diff = -diff;
+                  if (diff > threshold) update++;
+                  
+                  // alpha is the compass direction the device is facing in degrees
+                  var dir = eventData.alpha
+                  
+                  // call our orientation event handler
+                  if (update && !mouseisdown) {
+                      if ((update == 1) && atMax) {
+                          //  The one atMax is not noisy, but the other likely is, so ignore.
+                      }
+                      else {
+                          deviceOrientationHandler(tiltLR, tiltFB, dir);
+                          lastTiltLR = tiltLR;
+                          lastTiltFB = tiltFB;
+                      }
+                  }
+              }, false);
+          } else {
+              $("doEvent").innerHTML = "Not supported on your device or browser.  Sorry."
           }
-        }, false);
-      } else {
-          $("doEvent").innerHTML = "Not supported on your device or browser.  Sorry."
-      }
-    }
+    }())
 
     function drawNeedle(degrees) {
         var nCanvas = $('needle');
@@ -251,7 +248,7 @@
         var nCtx = nCanvas.getContext('2d');
         var radius = nWidth / 2;
         // Needle north points up (PI/4)
-        var angleRad = ((degrees + 90)%360) * Math.PI / 180;
+        var angleRad = ((degrees + 180)%360) * Math.PI / 180;
         nCtx.fillStyle = 'white';
         nCtx.fillRect(0,0,nWidth,nHeight);
         nCtx.fillStyle = 'blue';
