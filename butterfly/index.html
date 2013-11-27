@@ -245,8 +245,8 @@
         var nCanvas = $('needle');
         var nWidth = nCanvas.width;
         var nHeight = nCanvas.height;
-        var nCtx = nCanvas.getContext('2d');
         var radius = nWidth / 2;
+        var nCtx = nCanvas.getContext('2d');
         // Needle north points up (PI/4)
         var angleRad = ((degrees + 90) % 360) * (Math.PI / 180);
         nCtx.fillStyle = 'white';
