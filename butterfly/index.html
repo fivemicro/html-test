@@ -246,32 +246,36 @@
         var nWidth = nCanvas.width;
         var nHeight = nCanvas.height;
         var radius = nWidth / 2;
-        var nCtx = nCanvas.getContext('2d');
-        // Needle north points up (PI/4)
+        var centerX = nWidth / 2;
+        var centerY = nHeight / 2;
+        // Needle north points up (PI/4), so add 90 degrees
         var angleRad = ((degrees + 90) % 360) * (Math.PI / 180);
+        var nCtx = nCanvas.getContext('2d');
         nCtx.fillStyle = 'white';
         nCtx.fillRect(0,0,nWidth,nHeight);
         nCtx.fillStyle = 'blue';
         nCtx.beginPath();
-        nCtx.moveTo(nWidth / 2, nHeight / 2);
-        var endX = nWidth / 2;
-        var endY = nHeight / 2;
+        nCtx.moveTo(centerX, centerY);
+        var cartesianEndX = (Math.cos(angleRad) * radius);
+        var cartesianEndY = (Math.sin(angleRad) * radius);
+        var endX = centerX;
+        var endY = centerY;
         switch(window.orientation) {
         case 0:
-            endX = endX - (Math.cos(angleRad) * radius);
-            endY = endY - (Math.sin(angleRad) * radius);
+            endX = endX + cartesianEndX;
+            endY = endY - cartesianEndY;
             break;
         case 90:
-            endX = endX - (Math.sin(angleRad) * radius);
-            endY = endY + (Math.cos(angleRad) * radius);
+            endX = endX - cartesianEndY;
+            endY = endY + cartesianEndX;
             break;
         case -90:
-            endX = endX + (Math.sin(angleRad) * radius);
-            endY = endY - (Math.cos(angleRad) * radius);
+            endX = endX + cartesianEndY;
+            endY = endY - cartesianEndX;
             break;
         case 180:
-            endX = endX + (Math.cos(angleRad) * radius);
-            endY = endY + (Math.sin(angleRad) * radius);
+            endX = endX + cartesianEndX;
+            endY = endY + cartesianEndY;
             break;
         default:
             break;
