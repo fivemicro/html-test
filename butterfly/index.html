@@ -248,39 +248,36 @@
         var nCtx = nCanvas.getContext('2d');
         var radius = nWidth / 2;
         // Needle north points up (PI/4)
-        var angleRad = degrees * (Math.PI / 180);
+        var angleRad = ((degrees + 90) % 360) * (Math.PI / 180);
         nCtx.fillStyle = 'white';
         nCtx.fillRect(0,0,nWidth,nHeight);
         nCtx.fillStyle = 'blue';
-        nCtx.save();
         nCtx.beginPath();
         nCtx.moveTo(nWidth / 2, nHeight / 2);
         var endX = nWidth / 2;
         var endY = nHeight / 2;
-        nCtx.rotate(angleRad);
-        // switch(window.orientation) {
-        // case 0:
-        //     endX = endX - (Math.cos(angleRad) * radius);
-        //     endY = endY - (Math.sin(angleRad) * radius);
-        //     break;
-        // case 90:
-        //     endX = endX - (Math.sin(angleRad) * radius);
-        //     endY = endY + (Math.cos(angleRad) * radius);
-        //     break;
-        // case -90:
-        //     endX = endX + (Math.sin(angleRad) * radius);
-        //     endY = endY - (Math.cos(angleRad) * radius);
-        //     break;
-        // case 180:
-        //     endX = endX + (Math.cos(angleRad) * radius);
-        //     endY = endY + (Math.sin(angleRad) * radius);
-        //     break;
-        // default:
-        //     break;
-        // }
+        switch(window.orientation) {
+        case 0:
+            endX = endX - (Math.cos(angleRad) * radius);
+            endY = endY - (Math.sin(angleRad) * radius);
+            break;
+        case 90:
+            endX = endX - (Math.sin(angleRad) * radius);
+            endY = endY + (Math.cos(angleRad) * radius);
+            break;
+        case -90:
+            endX = endX + (Math.sin(angleRad) * radius);
+            endY = endY - (Math.cos(angleRad) * radius);
+            break;
+        case 180:
+            endX = endX + (Math.cos(angleRad) * radius);
+            endY = endY + (Math.sin(angleRad) * radius);
+            break;
+        default:
+            break;
+        }
         nCtx.lineTo(endX, endY);
         nCtx.stroke();
-        nCtx.restore();
     }
 
     function deviceOrientationHandler(tiltLR, tiltFB, dir) {
