@@ -128,13 +128,13 @@
 
       var g_X;
       var g_Y;
-      var g_Direction;
+      var g_Alpha;
 
       function animateBody(timestamp) {
           g_touch_x.innerHTML = g_X;
           g_touch_y.innerHTML = g_Y;
           g_body.style.webkitPerspectiveOrigin=g_X + 'px ' + g_Y + 'px';
-          drawNeedle(g_Direction);
+          drawNeedle(360 - g_Alpha);
       }
 
       (function() {
@@ -248,7 +248,7 @@
         var nCtx = nCanvas.getContext('2d');
         var radius = nWidth / 2;
         // Needle north points up (PI/4)
-        var angleRad = ((degrees + 180)%360) * Math.PI / 180;
+        var angleRad = degrees * (Math.PI / 180);
         nCtx.fillStyle = 'white';
         nCtx.fillRect(0,0,nWidth,nHeight);
         nCtx.fillStyle = 'blue';
@@ -287,7 +287,7 @@
       $("doTiltLR").innerHTML = newX;
       $("doTiltFB").innerHTML = newY;
       $("doDirection").innerHTML = dir.toFixed(3);
-      g_Direction = dir.toFixed(3);
+      g_Alpha = dir.toFixed(3);
 
       $("ScreenOrientation").innerHTML = window.orientation;
       $("ScreenWidth").innerHTML = screen.width;
