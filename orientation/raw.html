@@ -5,12 +5,12 @@
   
   <title>DeviceOrientation Test</title>
   
-  <!-- IOS/Safari tweaks -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 </head>
 <body>
+
   <table border="1" style="min-width:300px">
     <tr>
       <td>alpha</td>
@@ -25,6 +25,7 @@
       <td id="gammaValue"></td>
     </tr>
   </table>
+
   <script type="text/javascript">
     function $(e) {return document.getElementById(e) || document.getElementsByTagName(e)[0];}
 
@@ -32,9 +33,19 @@
     var g_beta_value_element = $('betaValue');
     var g_gamma_value_element = $('gammaValue');
 
-    var g_alpha;
-    var g_beta;
-    var g_gamma;
+    var g_alpha = 0.0;
+    var g_beta = 0.0;
+    var g_gamma = 0.0;
+
+    var threshold = 0.1;
+
+    function diffGreaterThanThreshold(a,b) {
+        var diff = a - b;
+        if (diff < 0) diff = -diff;
+        if (diff > threshold)
+            return 1;
+        return 0;
+    }
 
     function updateTable(timestamp) {
       g_alpha_value_element.innerHTML = g_alpha.toFixed(3);
@@ -46,10 +57,18 @@
         "use strict";
 
         window.addEventListener('deviceorientation', function(eventData) {
-            g_alpha = eventData.alpha;
-            g_beta = eventData.beta;
-            g_gamma = eventData.gamma;
-            requestAnimationFrame(updateTable);
+            var doUpdate = 0;
+
+            doUpdate += diffGreaterThanThreshold(eventData.alpha, g_alpha);
+            doUpdate += diffGreaterThanThreshold(eventData.beta, g_beta);
+            doUpdate += diffGreaterThanThreshold(eventData.gamma, g_gamma);
+
+            if (doUpdate > 0) {
+                g_alpha = eventData.alpha;
+                g_beta = eventData.beta;
+                g_gamma = eventData.gamma;
+                requestAnimationFrame(updateTable);
+            }
         }, false);
     }())
   </script>
