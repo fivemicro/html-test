@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 </head>
 <body>
-  <table>
+  <table border="1" style="min-width:300px">
     <tr>
       <td>alpha</td>
       <td id="alphaValue"></td>
@@ -37,9 +37,9 @@
     var g_gamma;
 
     function updateTable(timestamp) {
-      g_alpha_value_element.innerHTML = g_alpha;
-      g_beta_value_element.innerHTML = g_beta;
-      g_gamma_value_element.innerHTML = g_gamma;
+      g_alpha_value_element.innerHTML = g_alpha.toFixed(3);
+      g_beta_value_element.innerHTML = g_beta.toFixed(3);
+      g_gamma_value_element.innerHTML = g_gamma.toFixed(3);
     }
 
     (function() {
