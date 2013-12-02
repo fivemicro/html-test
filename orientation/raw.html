@@ -2,12 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  
-  <title>DeviceOrientation Test</title>
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>DeviceOrientation Test</title>
 </head>
 <body>
 
@@ -27,11 +23,7 @@
   </table>
 
   <script type="text/javascript">
-    function $(e) {return document.getElementById(e) || document.getElementsByTagName(e)[0];}
-
-    var g_alpha_value_element = $('alphaValue');
-    var g_beta_value_element = $('betaValue');
-    var g_gamma_value_element = $('gammaValue');
+    function $(e) {return document.getElementById(e);}
 
     var g_alpha = 0.0;
     var g_beta = 0.0;
@@ -47,29 +39,22 @@
         return 0;
     }
 
-    function updateTable(timestamp) {
-      g_alpha_value_element.innerHTML = g_alpha.toFixed(3);
-      g_beta_value_element.innerHTML = g_beta.toFixed(3);
-      g_gamma_value_element.innerHTML = g_gamma.toFixed(3);
-    }
+    window.addEventListener('deviceorientation', function(eventData) {
+        var doUpdate = 0;
 
-    (function() {
-        "use strict";
+        doUpdate += diffGreaterThanThreshold(eventData.alpha, g_alpha);
+        doUpdate += diffGreaterThanThreshold(eventData.beta, g_beta);
+        doUpdate += diffGreaterThanThreshold(eventData.gamma, g_gamma);
 
-        window.addEventListener('deviceorientation', function(eventData) {
-            var doUpdate = 0;
+        if (doUpdate > 0) {
+            g_alpha = eventData.alpha;
+            g_beta = eventData.beta;
+            g_gamma = eventData.gamma;
 
-            doUpdate += diffGreaterThanThreshold(eventData.alpha, g_alpha);
-            doUpdate += diffGreaterThanThreshold(eventData.beta, g_beta);
-            doUpdate += diffGreaterThanThreshold(eventData.gamma, g_gamma);
-
-            if (doUpdate > 0) {
-                g_alpha = eventData.alpha;
-                g_beta = eventData.beta;
-                g_gamma = eventData.gamma;
-                requestAnimationFrame(updateTable);
-            }
-        }, false);
-    }())
+            $('alphaValue').innerHTML = g_alpha.toFixed(3);
+            $('betaValue').innerHTML = g_beta.toFixed(3);
+            $('gammaValue').innerHTML = g_gamma.toFixed(3);
+        }
+    }, false);
   </script>
 </body>
