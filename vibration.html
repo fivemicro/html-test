@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>The Vibration API Example</title>
+  <script>
+    window.addEventListener("load", function() {
+      if (window.navigator.vibrate) {
+        document.querySelector("#supported").textContent = "Yes";
+        document.querySelector("#vibrateOnce").addEventListener("click", function() {
+          window.navigator.vibrate(1000);
+        }, false);
+        document.querySelector("#vibrateThrice").addEventListener("click", function() {
+          window.navigator.vibrate([1000, 1000, 2000, 1000, 3000]);
+        }, false);
+      } else {
+        document.querySelector("#supported").textContent = "No";
+      }
+    }, false);
+  </script>
+</head>
+<body>
+  Vibration API Supported:  <span id="supported"></span>
+  <br />
+  <input id="vibrateOnce" type="button" value="Vibrate Once" />
+  &nbsp;
+  <input id="vibrateThrice" type="button" value="Vibrate Thrice" />
+</body>
+</html>
