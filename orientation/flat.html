@@ -107,6 +107,32 @@
         return oldValue;
     }
 
+    function minCircleValue(newValue,oldValue) {
+        var newValueCircle = newValue;
+
+        if (newValueCircle > 180.0) {
+            newValueCircle = -(360.0 - newValueCircle);
+        }
+
+        if (oldValue == null || oldValue === undefined || newValueCircle < oldValue)
+            return newValue;
+
+        return oldValue;
+    }
+
+    function maxCircleValue(newValue,oldValue) {
+        var newValueCircle = newValue;
+                                                                           
+        if (newValueCircle > 180.0) {
+            newValueCircle = -(360.0 - newValueCircle);
+        }
+
+        if (oldValue == null || oldValue === undefined || newValueCircle > oldValue)
+            return newValue;
+
+        return oldValue;
+    }
+
     function handleDeviceOrientationEvent(eventData) {
         var doUpdate = 0;
         var elapsedTime = new Date().getTime() - g_start_time;
@@ -115,19 +141,15 @@
         $('totalTime').innerHTML = elapsedTime;
         $('eventRate').innerHTML = ((g_event_counter / elapsedTime) * 1000.0).toFixed(2);
 
-        $('alphaValueMin').innerHTML = (g_alpha_min = minValue(eventData.alpha, g_alpha_min)).toFixed(2);
+        $('alphaValueMin').innerHTML = (g_alpha_min = minCircleValue(eventData.alpha, g_alpha_min)).toFixed(2);
         $('betaValueMin').innerHTML = (g_beta_min = minValue(eventData.beta, g_beta_min)).toFixed(2);
         $('gammaValueMin').innerHTML = (g_gamma_min = minValue(eventData.gamma, g_gamma_min)).toFixed(2);
 
-        $('alphaValueMax').innerHTML = (g_alpha_max = maxValue(eventData.alpha, g_alpha_max)).toFixed(2);
+        $('alphaValueMax').innerHTML = (g_alpha_max = maxCircleValue(eventData.alpha, g_alpha_max)).toFixed(2);
         $('betaValueMax').innerHTML = (g_beta_max = maxValue(eventData.beta, g_beta_max)).toFixed(2);
         $('gammaValueMax').innerHTML = (g_gamma_max = maxValue(eventData.gamma, g_gamma_max)).toFixed(2);
 
         var alpha_diff = g_alpha_max - g_alpha_min;
-        if (alpha_diff > 180.0) {
-            alpha_diff = (360.0 - g_alpha_max) - g_alpha_min;
-            if (alpha_diff < 0.0) alpha_diff = -alpha_diff;
-        }
 
         $('alphaValueRange').innerHTML = alpha_diff.toFixed(3);
         $('betaValueRange').innerHTML = (g_beta_max - g_beta_min).toFixed(3);
