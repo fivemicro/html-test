@@ -11,7 +11,7 @@
   Lay the device flat on a still surface and press Start.
   <p>
     <input id="startTestButton" type="button" value="Start" />&nbsp;&nbsp;
-    <div id="timeLeft" style="display:none;float=left">Test Time Left: <span id="timeRemaining">30</span></div>
+    <div id="timeLeft" style="display:none;float=left">Test Time Left: <span id="timeRemaining"></span></div>
   </p>
 
   <table border="1" style="min-width:300px">
@@ -79,7 +79,7 @@
     var g_interval_id;
     var g_event_counter = 0;
     var threshold = 0.0;
-    var testTime = 5 * 1000;
+    var testTime = 30 * 1000;
 
     function diffGreaterThanThreshold(newValue,oldValue) {
         if (oldValue == null || oldValue === undefined)
@@ -123,7 +123,13 @@
         $('betaValueMax').innerHTML = (g_beta_max = maxValue(eventData.beta, g_beta_max)).toFixed(2);
         $('gammaValueMax').innerHTML = (g_gamma_max = maxValue(eventData.gamma, g_gamma_max)).toFixed(2);
 
-        $('alphaValueRange').innerHTML = (g_alpha_max - g_alpha_min).toFixed(2);
+        var alpha_diff = g_alpha_max - g_alpha_min;
+        if (alpha_diff > 180.0) {
+            alpha_diff = (360 - g_alpha_max) - g_alpha_min;
+            if (alpha_diff < 0) alpha_diff = -alpha_diff;
+        }
+
+        $('alphaValueRange').innerHTML = alpha_diff.toFixed(2);
         $('betaValueRange').innerHTML = (g_beta_max - g_beta_min).toFixed(2);
         $('gammaValueRange').innerHTML = (g_gamma_max - g_gamma_min).toFixed(2);
 
@@ -157,6 +163,7 @@
         g_event_counter = 0;
         window.addEventListener('deviceorientation', handleDeviceOrientationEvent, false);
         g_interval_id = setInterval(updateTestTimeLeft, 1000);
+        $('timeRemaining').innerHTML = testTime / 1000;
         $('timeLeft').style.display='';
     }
 
