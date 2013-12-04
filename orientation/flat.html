@@ -64,6 +64,7 @@
     function $(e) {return document.getElementById(e);}
 
     var g_alpha = null;
+    var g_alpha_normal = null;
     var g_beta = null;
     var g_gamma = null;
     var g_alpha_min = null;
@@ -78,20 +79,7 @@
     var g_end_time = 0;
     var g_interval_id;
     var g_event_counter = 0;
-    var threshold = 0.0;
     var testTime = 30 * 1000;
-
-    function diffGreaterThanThreshold(newValue,oldValue) {
-        if (oldValue == null || oldValue === undefined)
-            return 1;
-        if (newValue == null || newValue === undefined)
-            return 0;
-        var diff = newValue - oldValue;
-        if (diff < 0) diff = -diff;
-        if (diff > threshold)
-            return 1;
-        return 0;
-    }
 
     function minValue(newValue,oldValue) {
         if (oldValue == null || oldValue === undefined || newValue < oldValue)
@@ -107,67 +95,36 @@
         return oldValue;
     }
 
-    function minCircleValue(newValue,oldValue) {
-        var newValueCircle = newValue;
-
-        if (newValueCircle > 180.0) {
-            newValueCircle = -(360.0 - newValueCircle);
-        }
-
-        if (oldValue == null || oldValue === undefined || newValueCircle < oldValue)
-            return newValue;
-
-        return oldValue;
-    }
-
-    function maxCircleValue(newValue,oldValue) {
-        var newValueCircle = newValue;
-
-        if (newValueCircle > 180.0) {
-            newValueCircle = -(360.0 - newValueCircle);
-        }
-
-        if (oldValue == null || oldValue === undefined || newValueCircle > oldValue)
-            return newValue;
-
-        return oldValue;
-    }
-
     function handleDeviceOrientationEvent(eventData) {
-        var doUpdate = 0;
         var elapsedTime = new Date().getTime() - g_start_time;
 
         $('totalEvents').innerHTML = ++g_event_counter;
         $('totalTime').innerHTML = elapsedTime;
         $('eventRate').innerHTML = ((g_event_counter / elapsedTime) * 1000.0).toFixed(2);
 
-        $('alphaValueMin').innerHTML = (g_alpha_min = minCircleValue(eventData.alpha, g_alpha_min)).toFixed(2);
+        g_alpha_normal = g_alpha = eventData.alpha;
+        g_beta = eventData.beta;
+        g_gamma = eventData.gamma;
+
+        if (g_alpha > 180.0) {
+            g_alpha_normal = -(360.0 - g_alpha);
+        }
+
+        $('alphaValue').innerHTML = g_alpha.toFixed(2);
+        $('betaValue').innerHTML = g_beta.toFixed(2);
+        $('gammaValue').innerHTML = g_gamma.toFixed(2);
+
+        $('alphaValueMin').innerHTML = (g_alpha_min = minValue(g_alpha_normal, g_alpha_min)).toFixed(2);
         $('betaValueMin').innerHTML = (g_beta_min = minValue(eventData.beta, g_beta_min)).toFixed(2);
         $('gammaValueMin').innerHTML = (g_gamma_min = minValue(eventData.gamma, g_gamma_min)).toFixed(2);
 
-        $('alphaValueMax').innerHTML = (g_alpha_max = maxCircleValue(eventData.alpha, g_alpha_max)).toFixed(2);
+        $('alphaValueMax').innerHTML = (g_alpha_max = maxValue(g_alpha_normal, g_alpha_max)).toFixed(2);
         $('betaValueMax').innerHTML = (g_beta_max = maxValue(eventData.beta, g_beta_max)).toFixed(2);
         $('gammaValueMax').innerHTML = (g_gamma_max = maxValue(eventData.gamma, g_gamma_max)).toFixed(2);
 
-        var alpha_diff = g_alpha_max - g_alpha_min;
-
-        $('alphaValueRange').innerHTML = alpha_diff.toFixed(3);
+        $('alphaValueRange').innerHTML = (g_alpha_max - g_alpha_min).toFixed(3);
         $('betaValueRange').innerHTML = (g_beta_max - g_beta_min).toFixed(3);
         $('gammaValueRange').innerHTML = (g_gamma_max - g_gamma_min).toFixed(3);
-
-        doUpdate += diffGreaterThanThreshold(eventData.alpha, g_alpha);
-        doUpdate += diffGreaterThanThreshold(eventData.beta, g_beta);
-        doUpdate += diffGreaterThanThreshold(eventData.gamma, g_gamma);
-
-        if (doUpdate > 0) {
-            g_alpha = eventData.alpha;
-            g_beta = eventData.beta;
-            g_gamma = eventData.gamma;
-
-            $('alphaValue').innerHTML = g_alpha.toFixed(2);
-            $('betaValue').innerHTML = g_beta.toFixed(2);
-            $('gammaValue').innerHTML = g_gamma.toFixed(2);
-        }
     }
 
     function updateTestTimeLeft() {
