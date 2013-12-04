@@ -125,13 +125,13 @@
 
         var alpha_diff = g_alpha_max - g_alpha_min;
         if (alpha_diff > 180.0) {
-            alpha_diff = (360 - g_alpha_max) - g_alpha_min;
-            if (alpha_diff < 0) alpha_diff = -alpha_diff;
+            alpha_diff = (360.0 - g_alpha_max) - g_alpha_min;
+            if (alpha_diff < 0.0) alpha_diff = -alpha_diff;
         }
 
-        $('alphaValueRange').innerHTML = alpha_diff.toFixed(2);
-        $('betaValueRange').innerHTML = (g_beta_max - g_beta_min).toFixed(2);
-        $('gammaValueRange').innerHTML = (g_gamma_max - g_gamma_min).toFixed(2);
+        $('alphaValueRange').innerHTML = alpha_diff.toFixed(3);
+        $('betaValueRange').innerHTML = (g_beta_max - g_beta_min).toFixed(3);
+        $('gammaValueRange').innerHTML = (g_gamma_max - g_gamma_min).toFixed(3);
 
         doUpdate += diffGreaterThanThreshold(eventData.alpha, g_alpha);
         doUpdate += diffGreaterThanThreshold(eventData.beta, g_beta);
