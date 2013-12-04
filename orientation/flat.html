@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Lay Flat Test</title>
+</head>
+<body>
+  DeviceOrientationEvent Supported:  <span id="supported"></span>
+  <p>
+  Lay the device flat on a still surface and press Start.
+  <p>
+    <input id="startTestButton" type="button" value="Start" />&nbsp;&nbsp;
+    <div id="timeLeft" style="display:none;float=left">Test Time Left: <span id="timeRemaining">30</span></div>
+  </p>
+
+  <table border="1" style="min-width:300px">
+    <tr>
+      <td>Total Events</td>
+      <td id="totalEvents"></td>
+    </tr>
+    <tr>
+      <td>Total Time (ms)</td>
+      <td id="totalTime"></td>
+    </tr>
+    <tr>
+      <td>Event Rate (events/sec)</td>
+      <td id="eventRate"></td>
+    </tr>
+  </table>
+
+  <table border="1" style="min-width:300px">
+    <tr>
+      <th>variable</th>
+      <th>value</th>
+      <th>min</th>
+      <th>max</th>
+      <th>range</th>
+    </tr>
+    <tr>
+      <td>alpha</td>
+      <td id="alphaValue"></td>
+      <td id="alphaValueMin"></td>
+      <td id="alphaValueMax"></td>
+      <td id="alphaValueRange"></td>
+    </tr>
+    <tr>
+      <td>beta</td>
+      <td id="betaValue"></td>
+      <td id="betaValueMin"></td>
+      <td id="betaValueMax"></td>
+      <td id="betaValueRange"></td>
+    </tr>
+    <tr>
+      <td>gamma</td>
+      <td id="gammaValue"></td>
+      <td id="gammaValueMin"></td>
+      <td id="gammaValueMax"></td>
+      <td id="gammaValueRange"></td>
+    </tr>
+  </table>
+
+  <script type="text/javascript">
+    function $(e) {return document.getElementById(e);}
+
+    var g_alpha = null;
+    var g_beta = null;
+    var g_gamma = null;
+    var g_alpha_min = null;
+    var g_beta_min = null;
+    var g_gamma_min = null;
+    var g_alpha_max = null;
+    var g_beta_max = null;
+    var g_gamma_max = null;
+
+
+    var g_start_time = 0;
+    var g_end_time = 0;
+    var g_interval_id;
+    var g_event_counter = 0;
+    var threshold = 0.0;
+    var testTime = 5 * 1000;
+
+    function diffGreaterThanThreshold(newValue,oldValue) {
+        if (oldValue == null || oldValue === undefined)
+            return 1;
+        if (newValue == null || newValue === undefined)
+            return 0;
+        var diff = newValue - oldValue;
+        if (diff < 0) diff = -diff;
+        if (diff > threshold)
+            return 1;
+        return 0;
+    }
+
+    function minValue(newValue,oldValue) {
+        if (oldValue == null || oldValue === undefined || newValue < oldValue)
+            return newValue;
+
+        return oldValue;
+    }
+
+    function maxValue(newValue,oldValue) {
+        if (oldValue == null || oldValue === undefined || newValue > oldValue)
+            return newValue;
+
+        return oldValue;
+    }
+
+    function handleDeviceOrientationEvent(eventData) {
+        var doUpdate = 0;
+        var elapsedTime = new Date().getTime() - g_start_time;
+
+        $('totalEvents').innerHTML = ++g_event_counter;
+        $('totalTime').innerHTML = elapsedTime;
+        $('eventRate').innerHTML = ((g_event_counter / elapsedTime) * 1000.0).toFixed(2);
+
+        $('alphaValueMin').innerHTML = (g_alpha_min = minValue(eventData.alpha, g_alpha_min)).toFixed(2);
+        $('betaValueMin').innerHTML = (g_beta_min = minValue(eventData.beta, g_beta_min)).toFixed(2);
+        $('gammaValueMin').innerHTML = (g_gamma_min = minValue(eventData.gamma, g_gamma_min)).toFixed(2);
+
+        $('alphaValueMax').innerHTML = (g_alpha_max = maxValue(eventData.alpha, g_alpha_max)).toFixed(2);
+        $('betaValueMax').innerHTML = (g_beta_max = maxValue(eventData.beta, g_beta_max)).toFixed(2);
+        $('gammaValueMax').innerHTML = (g_gamma_max = maxValue(eventData.gamma, g_gamma_max)).toFixed(2);
+
+        $('alphaValueRange').innerHTML = (g_alpha_max - g_alpha_min).toFixed(2);
+        $('betaValueRange').innerHTML = (g_beta_max - g_beta_min).toFixed(2);
+        $('gammaValueRange').innerHTML = (g_gamma_max - g_gamma_min).toFixed(2);
+
+        doUpdate += diffGreaterThanThreshold(eventData.alpha, g_alpha);
+        doUpdate += diffGreaterThanThreshold(eventData.beta, g_beta);
+        doUpdate += diffGreaterThanThreshold(eventData.gamma, g_gamma);
+
+        if (doUpdate > 0) {
+            g_alpha = eventData.alpha;
+            g_beta = eventData.beta;
+            g_gamma = eventData.gamma;
+
+            $('alphaValue').innerHTML = g_alpha.toFixed(2);
+            $('betaValue').innerHTML = g_beta.toFixed(2);
+            $('gammaValue').innerHTML = g_gamma.toFixed(2);
+        }
+    }
+
+    function updateTestTimeLeft() {
+        var nowTime = new Date().getTime();
+        var diffInSecs = (g_end_time - nowTime) / 1000;
+        $('timeRemaining').innerHTML = Math.round(diffInSecs);
+    }
+
+    function startTest() {
+        g_start_time = new Date().getTime();
+        g_end_time = g_start_time + testTime;
+        g_alpha = g_beta = g_gamma = null;
+        g_alpha_min = g_beta_min = g_gamma_min = null;
+        g_alpha_max = g_beta_max = g_gamma_max = null;
+        g_event_counter = 0;
+        window.addEventListener('deviceorientation', handleDeviceOrientationEvent, false);
+        g_interval_id = setInterval(updateTestTimeLeft, 1000);
+        $('timeLeft').style.display='';
+    }
+
+    function stopTest() {
+        clearInterval(g_interval_id);
+        window.removeEventListener('deviceorientation', handleDeviceOrientationEvent, false);
+        $('timeRemaining').innerHTML = "0";
+        $('timeLeft').style.display='none';
+    }
+
+    if (window.DeviceOrientationEvent) {
+        $('supported').innerHTML = "Yes";
+    } else {
+        $('supported').innerHTML = "No";
+    }
+
+    $('startTestButton').addEventListener('click', function(eventData) {
+        startTest();
+        setTimeout(stopTest, testTime);
+    }, false);
+  </script>
+</body>
