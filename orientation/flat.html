@@ -68,9 +68,11 @@
     var g_beta = null;
     var g_gamma = null;
     var g_alpha_min = null;
+    var g_alpha_min_normal = null;
     var g_beta_min = null;
     var g_gamma_min = null;
     var g_alpha_max = null;
+    var g_alpha_max_normal = null;
     var g_beta_max = null;
     var g_gamma_max = null;
 
@@ -110,19 +112,29 @@
             g_alpha_normal = -(360.0 - g_alpha);
         }
 
+        g_alpha_min = g_alpha_min_normal = minValue(g_alpha_normal, g_alpha_min_normal);
+        if (g_alpha_min < 0.0) {
+            g_alpha_min = 360.0 + g_alpha_min;
+        }
+
+        g_alpha_max = g_alpha_max_normal = maxValue(g_alpha_normal, g_alpha_max_normal);
+        if (g_alpha_max < 0.0) {
+            g_alpha_max = 360.0 + g_alpha_max;
+        }
+
         $('alphaValue').innerHTML = g_alpha.toFixed(2);
         $('betaValue').innerHTML = g_beta.toFixed(2);
         $('gammaValue').innerHTML = g_gamma.toFixed(2);
 
-        $('alphaValueMin').innerHTML = (g_alpha_min = minValue(g_alpha_normal, g_alpha_min)).toFixed(2);
+        $('alphaValueMin').innerHTML = g_alpha_min.toFixed(2);
         $('betaValueMin').innerHTML = (g_beta_min = minValue(eventData.beta, g_beta_min)).toFixed(2);
         $('gammaValueMin').innerHTML = (g_gamma_min = minValue(eventData.gamma, g_gamma_min)).toFixed(2);
 
-        $('alphaValueMax').innerHTML = (g_alpha_max = maxValue(g_alpha_normal, g_alpha_max)).toFixed(2);
+        $('alphaValueMax').innerHTML = g_alpha_max.toFixed(2);
         $('betaValueMax').innerHTML = (g_beta_max = maxValue(eventData.beta, g_beta_max)).toFixed(2);
         $('gammaValueMax').innerHTML = (g_gamma_max = maxValue(eventData.gamma, g_gamma_max)).toFixed(2);
 
-        $('alphaValueRange').innerHTML = (g_alpha_max - g_alpha_min).toFixed(3);
+        $('alphaValueRange').innerHTML = (g_alpha_max_normal - g_alpha_min_normal).toFixed(3);
         $('betaValueRange').innerHTML = (g_beta_max - g_beta_min).toFixed(3);
         $('gammaValueRange').innerHTML = (g_gamma_max - g_gamma_min).toFixed(3);
     }
@@ -139,6 +151,7 @@
         g_alpha = g_beta = g_gamma = null;
         g_alpha_min = g_beta_min = g_gamma_min = null;
         g_alpha_max = g_beta_max = g_gamma_max = null;
+        g_alpha_normal = g_alpha_min_normal = g_alpha_max_normal = null;
         g_event_counter = 0;
         window.addEventListener('deviceorientation', handleDeviceOrientationEvent, false);
         g_interval_id = setInterval(updateTestTimeLeft, 1000);
